@@ -1,0 +1,40 @@
+input NewUser {
+  name: String
+  email: String!
+  password: String!
+}
+
+input NewAddress {
+  country: String!
+  state: String!
+  zip: Int!
+}
+
+type UserDetail{
+  id: Int!
+  name: String
+  email: String!
+  role: String
+  createdAt: Timestamp!
+  token: String
+  address: Address
+}
+
+type Address{
+  country: String
+  state: String
+  zip: Int
+}
+
+type Mutation{
+  signupUser(input: NewUser!): UserDetail!
+  addAddress(input: NewAddress!):UserDetail! @isAuthenticated
+}
+
+type Query{
+  userInfo(id: Int): [UserDetail!]!
+}
+
+scalar Timestamp
+
+ directive @isAuthenticated on FIELD_DEFINITION
