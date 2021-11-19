@@ -1,15 +1,15 @@
 apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
-  name: Golang-boilerplate
-  title: Golang-boilerplate
-  description: Create a new golang service
+  name: Golang Template
+  title: Golang Template
+  description: Create a website powered with golang service
   tags:
     - go
     - experimental
 spec:
   owner: web@example.com
-  type: service
+  type: website
   parameters:
     - title: Provide some simple information
       required:
@@ -30,12 +30,12 @@ spec:
           description: Owner of the component
           ui:field: OwnerPicker
           ui:options:
-            allowedKinds: 
+            allowedKinds:
               - Group
-    - title: Choose a location  
+    - title: Choose a location
       required:
         - repoUrl
-      properties: 
+      properties:
         repoUrl:
           title: Repository Location
           type: string
