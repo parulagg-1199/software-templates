@@ -10,7 +10,6 @@ metadata:
 spec:
   owner: web@example.com
   type: service
-  path: "."
   parameters:
     - title: Provide some simple information
       required:
