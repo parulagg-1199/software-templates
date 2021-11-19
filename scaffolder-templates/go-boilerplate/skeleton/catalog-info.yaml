@@ -9,4 +9,4 @@ metadata:
 spec:
   type: website
   lifecycle: experimental
-  owner: ${{values.owner | dump}}
+  owner: ${{values.owner | dump}} 
