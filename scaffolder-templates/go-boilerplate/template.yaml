@@ -1,12 +1,12 @@
-apiVersion: backstage.io/v1alpha1
+apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
-  name: golang-starter
-  title: Golang Microservice
-  description: Create a Golang repo with this template built by members of the Go community
+  name: Golang-boilerplate
+  title: Golang-boilerplate
+  description: Create a new golang service
   tags:
-    - experimental
     - go
+    - experimental
 spec:
   owner: web@example.com
   type: service
