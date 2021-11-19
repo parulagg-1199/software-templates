@@ -11,88 +11,39 @@ spec:
   owner: web@example.com
   type: service
   path: "."
-  schema:
-    required:
-      - component_id
-      - owner
-      - project_short_description
-      - docker_image
-      - docker_build_image
-      - docker_build_image_version
-      - use_logrus_logging
-      - use_viper_config
-      - use_ci
-      - use_cobra_cmd
-      -repourl
-    properties:
-      component_id:
-        title: Name
-        type: string
-        description: Unique name of the component
-      project_short_description:
-        title: Description
-        type: string
-        description: Description of the component
-      owner:
+  parameters:
+    - title: Provide some simple information
+      required:
+        - component_id
+        - owner
+      properties:
+        component_id:
+          title: Name
+          type: string
+          description: Unique name of the component
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this website is for.
+        owner:
           title: Owner
           type: string
           description: Owner of the component
-      docker_image:
-        title: Docker Image
-        type: string
-        description: The docker base image to use when running the service
-        default: alpine-base-image:latest
-      docker_build_image:
-        title: Docker Build Image
-        type: string
-        description: The docker base image to use when building the service
-        default: golang
-      docker_build_image_version:
-        title: Docker Build Image Version
-        description: The image version to use when building the service
-        type: string
-        enum:
-          - alpine
-        default: alpine
-      use_logrus_logging:
-        title: Enable Logrus Logging (https://github.com/sirupsen/logrus)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_viper_config:
-        title: Enable Viper Config (https://github.com/spf13/viper)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_cobra_cmd:
-        title: Enable Cobra CLI Tools (https://github.com/spf13/cobra)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_ci:
-        title: Add CI
-        description: Add a CI config to the repo, Gitub Actions, Circle or Travis are the only supported right now
-        type: string
-        enum:
-          - github
-          - travis
-          - circle
-          - none
-        default: github
-      repoUrl:
-        title: Repository Location
-        type: string
-        ui:field: RepoUrlPicker
-        ui:options:
-          allowedHosts:
-            - github.com
-        
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds: 
+              - Group
+    - title: Choose a location  
+      required:
+        - repoUrl
+      properties: 
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
   steps:
     - id: template
       name: Fetch Skeleton + Template
@@ -125,4 +76,3 @@ spec:
   output:
     remoteUrl: '{{ steps.publish.output.remoteUrl }}'
     entityRef: '{{ steps.register.output.entityRef }}'
-     
