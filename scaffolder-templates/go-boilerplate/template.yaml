@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
-  name: Golang Template
+  name: Golang boilerplate
   title: Golang Template
   description: Create a website powered with golang service
   tags:
