@@ -9,7 +9,6 @@ metadata:
     - go
 spec:
   owner: web@example.com
-  templater: cookiecutter
   type: service
   path: "."
   schema:
