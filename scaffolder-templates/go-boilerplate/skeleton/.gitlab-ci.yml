@@ -1,0 +1,10 @@
+stages:
+  - code_review
+
+
+code_review: 
+ stage: code_review  # code review using sonarqube
+ script:
+    - sonar-scanner  -Dsonar.projectKey=$CI_PROJECT_NAME  -Dsonar.sources=.  -Dsonar.projectVersion=d$CI_PIPELINE_ID -Dsonar.host.url=$sonarqube_url   -Dsonar.login=$sonarqube_token
+ allow_failure: true
+
