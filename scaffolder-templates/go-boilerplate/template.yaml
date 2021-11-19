@@ -1,82 +1,81 @@
-apiVersion: backstage.io/v1alpha1
+apiVersion: backstage.io/v1beta2
 kind: Template
+# some metadata about the template itself
 metadata:
-  name: golang-starter
-  title: Golang Microservice
-  description: Create a Golang repo with this template built by members of the Go community
-  tags:
-    - experimental
-    - go
+  name: v1beta2-demo
+  title: Test Action template
+  description: scaffolder v1beta2 template demo
 spec:
-  owner: web@example.com
-  templater: cookiecutter
+  owner: backstage/techdocs-core
   type: service
-  path: "."
-  schema:
-    required:
-      - component_id
-      - project_short_description
-      - docker_image
-      - docker_build_image
-      - docker_build_image_version
-      - use_logrus_logging
-      - use_viper_config
-      - use_ci
-      - use_cobra_cmd
-    properties:
-      component_id:
-        title: Name
-        type: string
-        description: Unique name of the component
-      project_short_description:
-        title: Description
-        type: string
-        description: Description of the component
-      docker_image:
-        title: Docker Image
-        type: string
-        description: The docker base image to use when running the service
-        default: alpine-base-image:latest
-      docker_build_image:
-        title: Docker Build Image
-        type: string
-        description: The docker base image to use when building the service
-        default: golang
-      docker_build_image_version:
-        title: Docker Build Image Version
-        description: The image version to use when building the service
-        type: string
-        enum:
-          - alpine
-        default: alpine
-      use_logrus_logging:
-        title: Enable Logrus Logging (https://github.com/sirupsen/logrus)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_viper_config:
-        title: Enable Viper Config (https://github.com/spf13/viper)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_cobra_cmd:
-        title: Enable Cobra CLI Tools (https://github.com/spf13/cobra)
-        type: string
-        enum:
-          - "y"
-          - "n"
-        default: "y"
-      use_ci:
-        title: Add CI
-        description: Add a CI config to the repo, Gitub Actions, Circle or Travis are the only supported right now
-        type: string
-        enum:
-          - github
-          - travis
-          - circle
-          - none
-        default: github
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Fill in some steps
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./template
+        values:
+          name: '{{ parameters.name }}'
+          owner: '{{ parameters.owner }}'
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./community
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: 'This is {{ parameters.name }}'
+        repoUrl: '{{ parameters.repoUrl }}'
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: '{{ steps.publish.output.repoContentsUrl }}'
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    remoteUrl: '{{ steps.publish.output.remoteUrl }}'
+    entityRef: '{{ steps.register.output.entityRef }}'
