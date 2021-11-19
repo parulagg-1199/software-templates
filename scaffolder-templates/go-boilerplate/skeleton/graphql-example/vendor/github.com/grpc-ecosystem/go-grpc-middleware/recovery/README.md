@@ -1,1 +1,1 @@
-DOC.md
+doc
